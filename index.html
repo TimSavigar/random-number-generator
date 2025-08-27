@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Number & Lottery Number Generator</title>
+    <meta name="description" content="Generate random numbers or create sets for UK National Lottery and EuroMillions draws.">
+    <meta name="keywords" content="random number generator, lottery number generator, UK National Lottery, EuroMillions, random numbers">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 2rem; max-width: 800px; margin-left: auto; margin-right: auto; }
+        h1 { color: #333333; }
+        form { margin-top: 1rem; }
+        label { display: block; margin: 0.5rem 0 0.2rem; font-weight: bold; }
+        input, select { width: 100%; padding: 0.5rem; margin-bottom: 1rem; box-sizing: border-box; }
+        button { padding: 0.5rem 1rem; background-color: #0066cc; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #004d99; }
+        .result { margin-top: 1rem; background: #f5f5f5; padding: 1rem; border: 1px solid #dddddd; }
+        footer { margin-top: 2rem; font-size: 0.9rem; color: #666666; }
+    </style>
+</head>
+<body>
+
+    <h1>Random Number & Lottery Number Generator</h1>
+    <p>Generate a random number within your chosen range or produce lottery numbers for common draws. This tool uses JavaScript’s built‑in pseudo‑random generator for fairness.</p>
+    <form id="random-form" onsubmit="event.preventDefault(); generateRandom();">
+        <label for="min">Minimum</label>
+        <input type="number" id="min" value="1" step="1" required>
+        <label for="max">Maximum</label>
+        <input type="number" id="max" value="100" step="1" required>
+        <button type="submit">Generate Random Number</button>
+    </form>
+    <button onclick="generateLottery('uk')">Generate UK Lottery Numbers</button>
+    <button onclick="generateLottery('euromillions')">Generate EuroMillions Numbers</button>
+    <div id="randomResult" class="result" style="display:none;"></div>
+    <h2>About random numbers</h2>
+    <p>Random numbers are used in games, lotteries and simulations. While computer‑generated numbers are not truly random, they provide sufficient unpredictability for everyday use. Lottery games like the UK National Lottery and EuroMillions require a set of unique numbers from a predefined range.</p>
+    <p>Always play responsibly. This tool is for entertainment and educational purposes only and does not increase your chances of winning a lottery.</p>
+<script>
+
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        function generateRandom() {
+            const min = parseInt(document.getElementById('min').value);
+            const max = parseInt(document.getElementById('max').value);
+            if (isNaN(min) || isNaN(max) || min > max) return;
+            const num = randomInt(min, max);
+            const resultDiv = document.getElementById('randomResult');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `<strong>Random Number:</strong> ${num}`;
+        }
+        function generateLottery(type) {
+            let numbers = [];
+            if (type === 'uk') {
+                while (numbers.length < 6) {
+                    const n = randomInt(1, 59);
+                    if (!numbers.includes(n)) numbers.push(n);
+                }
+                numbers.sort((a,b) => a - b);
+                displayResult('UK National Lottery Numbers', numbers.join(', '));
+            } else if (type === 'euromillions') {
+                let main = [];
+                while (main.length < 5) {
+                    const n = randomInt(1, 50);
+                    if (!main.includes(n)) main.push(n);
+                }
+                main.sort((a,b) => a - b);
+                let stars = [];
+                while (stars.length < 2) {
+                    const n = randomInt(1, 12);
+                    if (!stars.includes(n)) stars.push(n);
+                }
+                stars.sort((a,b) => a - b);
+                displayResult('EuroMillions Numbers', `Main: ${main.join(', ')} | Stars: ${stars.join(', ')}`);
+            }
+        }
+        function displayResult(title, msg) {
+            const resultDiv = document.getElementById('randomResult');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `<strong>${title}:</strong> ${msg}`;
+        }
+    
+</script>
+    <footer>
+        <p>Disclaimer: This tool is for informational purposes only. Please verify any calculations with official sources before making financial or health decisions.</p>
+    </footer>
+</body>
+</html>
